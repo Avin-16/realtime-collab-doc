@@ -5,11 +5,11 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from auth.jwt_handler import SECRET_KEY ,ALGORITHM
 from auth.routes import *
-from database import get_db
+from database import get_db,engine
 from models import User
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-
+from sqlalchemy import text
 
 app = FastAPI()
 app.include_router(auth_router)
@@ -63,3 +63,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
 
     #  Return user model (used in protected routes)
     return user
+
+
+@app.get("/health/")
+async def healthdb():
+    try :
+        async with engine.connect() as connection:
+            await connection.execute(text("SELECT 1"))
+        return{ "status":"ok" , "database":"connected"}
+    except Exception as e:
+        raise HTTPException(status_code=500 , detail="db connection failed : {e}" )

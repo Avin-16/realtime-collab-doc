@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
-DATABASE_URL = "postgresql+asyncpg://postgres:123456@localhost:5432/realtime_collab"
+DATABASE_URL = "postgresql+asyncpg://postgres:123456@localhost:5433/realtime_collab"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
